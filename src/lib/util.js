@@ -57,7 +57,7 @@ module.exports = {
         return value
     },
     formatCep(value) {
-        //78.135-619
+
         value = value.replace(/\D/g, "")
 
         if (value.length > 8)

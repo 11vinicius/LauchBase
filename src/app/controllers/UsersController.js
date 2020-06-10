@@ -1,3 +1,4 @@
+const { hash } = require('bcryptjs')
 const User = require('../models/user')
 const { formatCep, formatCpfCnpj } = require('../../lib/util')
 
@@ -6,19 +7,43 @@ module.exports = {
         res.render('users/register')
     },
     async show(req, res) {
-        const { user } = req
+        try {
 
-        user.cpf_cnpj = formatCpfCnpj(user.cpf_cnpj)
-        user.cep = formatCep(user.cep)
+            const { user } = req
 
-        res.render('users/index', { user })
+            user.cpf_cnpj = formatCpfCnpj(user.cpf_cnpj)
+            user.cep = formatCep(user.cep)
+
+            res.render('users/index', { user })
+
+        } catch (error) {
+            console.error(error)
+        }
     },
     async post(req, res) {
+        try {
+            let { name, email, password, cpf_cnpj, cep, address } = req.body
 
-        const userId = await User.create(req.body)
-        req.session.userId = userId
 
-        return res.redirect('/users')
+            password = await hash(password, 8)
+            cpf_cnpj = cpf_cnpj.replace(/\D/g, "")
+            cep = cep.replace(/\D/g, "")
+
+            const userId = await User.create({
+                name,
+                email,
+                password,
+                cpf_cnpj,
+                cep,
+                address
+            })
+            req.session.userId = userId
+
+            return res.redirect('/users')
+        } catch (error) {
+            console.error(error)
+        }
+
     },
     async update(req, res) {
         try {
