@@ -1,3 +1,4 @@
+  
 {% macro products(name, classes, products) %}
 
     <section class="shop {{classes}}">
@@ -12,10 +13,10 @@
                 <div class="image" style="background-image:url('{{product.img if product.img else '//placeholde.it/500x500'}}')">
                 
                 </div>
-                {%if product .oldprice !=product.peice%}]
-                <div class="old-price">{{product.oldprice}}</div>
+                {%if product.formattedOldprice != product.formattedPrice%}
+                <div class="old-price">{{product.formattedOldprice}}</div>
                 {%endif%}
-                    <p>{{product.price}}</p>
+                    <p>{{product.formattedPrice}}</p>
                     <h4>{{product.name}}</h4>
                 <a href="/products/{{product.id}}" class="button">Ver produto</a>
             </div>
