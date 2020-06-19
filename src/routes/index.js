@@ -4,6 +4,7 @@ const multer = require('../app/middleware/multer')
 
 const ProductController = require('../app/controllers/productController')
 const homeController = require('../app/controllers/homecontroller.js')
+const cart = require('./cart')
 
 
 const users = require('./users')
@@ -11,8 +12,10 @@ const products = require('./products')
 
 routes.get('/', homeController.index)
 
-routes.use('/users', users)
 routes.use('/products', products)
+routes.use('/users', users)
+routes.use('/cart', cart)
+
 
 
 routes.get('/ads/create', function(req, res) {

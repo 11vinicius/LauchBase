@@ -10,7 +10,7 @@
         <div class="items">
         {% for product in products%}
             <div class="product">
-                <div class="image" style="background-image:url('{{product.img if product.img else '//placeholde.it/500x500'}}')">
+                <div class="image" style="background-image:url('{{product.files if product.files else '//placehold.it/500x500/'}}')">
                 
                 </div>
                 {%if product.formattedOldprice != product.formattedPrice%}

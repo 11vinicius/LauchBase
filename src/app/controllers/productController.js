@@ -20,13 +20,6 @@ module.exports = {
 
         try {
 
-            const keys = Object.keys(req.body)
-
-            for (key of keys) {
-                if (req.body[key] == "") {
-                    res.send("Preencha todos os campos.")
-                }
-            }
 
             let { category_id, name, description, price, quantity } = req.body
 
@@ -62,6 +55,7 @@ module.exports = {
                     id: req.params.id
                 }
             })
+            console.log(product)
             return res.render(`products/show`, { product })
         } catch (error) {
             console.error(error)

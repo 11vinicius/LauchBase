@@ -41,7 +41,7 @@
             {% if product.files %}
                 {% for image in product.files %}
                     <div class="photo" id={{image.id}}>
-                        <img src="{{image.src}}" alt="{{image.name}}" >
+                        <img src="/image/{{image.src}}" >
                         <i class="material-icons"
                         onclick="PhotosUpload.removeOldPhoto(event)">
                             close

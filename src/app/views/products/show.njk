@@ -1,8 +1,9 @@
 {% extends "layout.njk" %}
+{% import "parts/card.njk" as cards %}
 
 {% block content %}
 
-<section class="product-single conteiner">
+{% call cards.render('Meus Anúncio','product-single container') %}
 
     <div class="gallery">
         <div class="highlight">
@@ -26,7 +27,7 @@
 
         <div class="gallery-preview">
             {%for image in product.files%}
-                <img src="{{image.src}}" alt="{{image.name}}"
+                <img src="/image/{{image.src}}" alt="{{image.name}}"
                 {%if loop.index0 == 0 %}
                 class="active"
                 {%endif%}
@@ -49,26 +50,31 @@
 
         <div class="price-buy"> 
             <div class="price">
-               R$ {{product.formattedPrice}}
-              {%if product.formattedOldprice != product.formattedPrice%}
-                <div class="old">{{product.formattedOldprice}}</div>
+               R$ {{product.formattedOldprice}}
+                {%if product.formattedOldprice != product.formattedPrice%}
+                    <div class="old">{{product.formattedPrice}}</div>
                 {%endif%}
             </div>
            
+           {%if (session.userId) and(product.user_id == session.userId)%}
+                <p class="unavailable">Você é o comprador.</p>
+           {%else%}
             <div class="buy">
                 {% if product.status == 0 %}
                     <p class="unavailable">Indisponível</p>
                 {% elseif product.quantity ==0 %}
                     <p class="unavailable">Fora de estoque</p>
                 {% else %}
-                 <button class="button">Comprar</button>
+                    <form action="/cart/{{product.id}}/add-one" method="post">
+                        <button class="button">Adicionar ao carrinho</button>
+                    </form>
                  {% endif %}
             </div>
+            {%endif%}
         </div>
 
     </div>
 
-
-</section>
+{% endcall%}
 
 {% endblock content %}
