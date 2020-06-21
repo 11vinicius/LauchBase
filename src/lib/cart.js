@@ -1,4 +1,4 @@
-    const {formatPrice} = require('./util')
+const {formatPrice} = require('./util')
 
 const Cart = {
     init(oldCart){
@@ -31,6 +31,7 @@ const Cart = {
             }
             this.items.push(inCart)
         }
+
         if(inCart.quantity >= product.quantity)return this
 
         inCart.quantity++
@@ -53,14 +54,13 @@ const Cart = {
         inCart.formattedPrice = formatPrice(inCart.price)
 
         this.total.quantity--
-        this.total.price -=inCart.product.price
-        this.total.formattedPrice = formatPrice(this.total.price)
+        this.total.price -= inCart.product.price
+        this.total.formattedPrice -= formatPrice(this.total.price)
 
         if(inCart.quantity < 1){
-            this.items.filter(item=>
-                item.product.id != inCart.product.id)
-
-            return this
+            this.items = this.items.filter(item => item.product.id != inCart.product.id)
+           
+           return this
         }
         return this
     },
@@ -73,31 +73,13 @@ const Cart = {
             this.total.price -=(inCart.product.price * inCart.quantity)
             this.total.formattedPrice = formatPrice(this.total.price)
         }
-        this.items = this.items.filter(item=>inCart.product.id == item.product.id)
+        this.items = this.items.filter(item=>inCart.product.id != item.product.id)
         return this
 
     },
     getCartItem(productId){
         return this.items.find(item =>item.product.id == productId)
     }
-}
-
-const product = {
-    id:1,
-    price:199,
-    quantity:2
-}
-
-const product1 = {
-    id:1,
-    price:199,
-    quantity:2
-}
-
-const product2 = {
-    id:1,
-    price:199,
-    quantity:2
 }
 
 module.exports = Cart

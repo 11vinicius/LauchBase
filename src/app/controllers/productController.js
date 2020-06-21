@@ -55,7 +55,7 @@ module.exports = {
                     id: req.params.id
                 }
             })
-            console.log(product)
+            
             return res.render(`products/show`, { product })
         } catch (error) {
             console.error(error)
