@@ -1,10 +1,9 @@
 const express = require('express')
 const routes = express.Router()
-const multer = require('../app/middleware/multer')
 
-const ProductController = require('../app/controllers/productController')
 const homeController = require('../app/controllers/homecontroller.js')
 const cart = require('./cart')
+const orders = require('./orders')
 
 
 const users = require('./users')
@@ -15,6 +14,7 @@ routes.get('/', homeController.index)
 routes.use('/products', products)
 routes.use('/users', users)
 routes.use('/cart', cart)
+routes.use('/orders',orders)
 
 
 

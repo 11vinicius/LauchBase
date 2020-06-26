@@ -1,7 +1,8 @@
 const LoadProductsServise = require('../services/LoadProductsService')
+const LoadOrdersServise = require('../services/LoadOrdersService')
 const User = require('../models/user')
-const mailer =require('../../lib/mailer')
-const { product } = require('../services/LoadProductsService')
+const Order = require('../models/Order')
+const Cart = require('../../lib/cart')
 
 
 const email = (seller, product, buyer)=>`
@@ -22,29 +23,77 @@ const email = (seller, product, buyer)=>`
 `
 
 module.exports = {
+    async index(req,res){
+        const orders = await LoadOrdersServise.load('orders',{
+            where:{buyer_id:req.session.userId}
+        }) 
+       
+        return res.render("orders/index",{orders})
+    },
+    async sales(req,res){
+        const sales = await LoadOrdersServise.load('orders',{
+            where:{seller_id: req.session.userId}
+        })
+             
+        return res.render("orders/sales",{sales})
+    },
+    async show(req,res){
+        const order = await LoadOrdersServise.load('order',{
+            where:{id: req.params.id}
+        })
+       
+        return res.render('orders/details',{order})
+    },
     async post(req, res) {
         try {
-          const product = await LoadProductsServise.load('product',{where:{
-              id:req.body.id
-          }})
+            const  cart = Cart.init(req.session.cart)
+            
+            const buyer_id = req.session.userId
+            const filteredItems = cart.items.filter(item =>
+                item.product.user_id != buyer_id
+            )
 
-          const seller = await User.findOne({where:{id:product.user_id}})
-        
-         
-          const buyer = await User.findOne({where:{id:req.session.userId}})
+            const createOdersPromise = filteredItems.map(async item =>{
+               let { product, price:total, quantity } = item 
+               const { price, id:product_id, user_id: seller_id } = product
+               const status = "open"
+               
+               const order = await Order.create({
+                   seller_id,
+                   buyer_id,
+                   product_id,
+                   price,
+                   total,
+                   quantity,
+                   status
+               })
 
-         
-          await mailer.sendMail({
-              to: seller.email,
-              from:'novo pedido de compra',
-              html:email(seller, product, buyer)
-          })
-          return res.send('orders/success')
+                product = await LoadProductsServise.load('product',{where:{
+                    id:product_id
+                }})
+    
+                const seller = await User.findOne({where:{id:seller_id}})
+            
+            
+                const buyer = await User.findOne({where:{id:buyer_id}})
+    
+            
+                await mailer.sendMail({
+                    to: seller.email,
+                    from:'novo pedido de compra',
+                    html:email(seller, product, buyer)
+                })
+                return order
+            })
+            await Promise.all(createOdersPromise)
+            delete req.session.cart
+            Cart.init()
+
+          return res.render('orders/success')
 
         } catch (error) {
             console.error(error)
-            return res.send('orders/erro')
+            return res.render('orders/error')
         }
     }
-
-}
+}    

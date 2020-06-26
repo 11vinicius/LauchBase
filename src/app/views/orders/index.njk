@@ -1,0 +1,50 @@
+
+{% extends "layout.njk" %}
+
+{% import "parts/card.njk" as cards %}
+
+
+{% block content %}
+
+
+    {% if (orders.length <1)%}
+        {% call cards.render('','cart-empty container')%}
+                  <p>Nenhum Pedido</p>  
+                  <a href="/product/search" class="button">Comprar</a>    
+        {%endcall %}
+        </section>
+    {%else%}
+
+    {% call cards.render('Meus Pedidos','orders container')%}
+    
+        {%for order in orders%}
+        
+            <div class="items">
+                <div class="item-container">
+                    <div class="item">
+                        <img src="image/1592937595985-photo-1550989460-0adf9ea622e2.jpg" alt="Imagem do Produto {{order.product.name}}">
+                        <div>
+                            <div class="title"> {{order.product.name}}</div>
+                            <div class="price"> {{order.formattedPrice}}</div>
+                            <div class="updated-at"> {{order.formattedUpdatedAt}}</div>
+                        </div>
+                    </div>
+                    <div class="quantity">
+                        Qtd.{{order.quantity}}
+                    </div>
+                    <div class="total">
+                        {{order.formatTotal}}
+                    </div>
+                    <div class="status {{order.status}}">
+                        {{order.formateedStatus}}
+                    </div>
+                </div>
+            </div>
+
+        {%endfor%}
+   
+{%endcall %}
+
+{%endif%}
+
+{% endblock content %}
