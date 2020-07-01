@@ -14,7 +14,9 @@ ul.dropdown{
     left:0;
     margin-top: 4px;
     padding: 8px 0;
+    width: 180px;
     display: flex;
+    z-index: 1;
     flex-direction: column;
     background-color: white;
     border-radius: 4px;
@@ -43,7 +45,7 @@ ul.dropdown li:hover button{
     background-color: #eee;
 }
 
-.action.dropdown-container{
+.actions.dropdown-container{
     display: flex;
     align-items: center;
     height: 48px;
@@ -51,6 +53,6 @@ ul.dropdown li:hover button{
     padding: 0 16px;
 }
 
-.action.dropdown-container:hover{
+.actions.dropdown-container:hover{
     background-color: white;
 }

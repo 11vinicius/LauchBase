@@ -9,6 +9,7 @@ routes.post('/',onlyUsers, OrderController.post)
         .get('/',onlyUsers, OrderController.index)
         .get('/sales',onlyUsers,OrderController.sales)
         .get('/:id',onlyUsers,orderController.show)
+        .post('/:id/:action',onlyUsers,orderController.update)
         
       
 

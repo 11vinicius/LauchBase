@@ -3,6 +3,7 @@ const LoadOrdersServise = require('../services/LoadOrdersService')
 const User = require('../models/user')
 const Order = require('../models/Order')
 const Cart = require('../../lib/cart')
+const { update } = require('../models/Order')
 
 
 const email = (seller, product, buyer)=>`
@@ -94,6 +95,37 @@ module.exports = {
         } catch (error) {
             console.error(error)
             return res.render('orders/error')
+        }
+    },
+    async update(req,res){
+        try {
+
+            const {id,action} = req.params
+
+            const aceptedActions = ['close','cancel']
+
+            if(!aceptedActions.includes(action))return res.send("can't do this action")
+    
+                const order = await Order.findOne({
+                    where: {id}
+                })
+
+                if(order.status !='open')return res.send("can't do this action")
+                
+                const statuses = {
+                    close:'sold',
+                    cancel:'canceled'
+                }
+
+                order.status = statuses[action]
+
+                await Order.update(id,{
+                    status: order.status
+                })
+
+                return res.send('/orders/sales')
+        } catch (error) {
+            console.log(error)
         }
     }
 }    
